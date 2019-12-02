@@ -79,6 +79,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
      */
     @PluginMethod()
     public void playUltraTone(PluginCall call) {
+
         String playCount = call.getString("play_count");
         String token = call.getString("token").trim();
         String ticket = call.getString("ticket").trim();
@@ -96,6 +97,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
                 mSoundPlayer.TTPlayMixed10USString(new String[]{token, ticket}, new int[]{0, 2});
             }
         }
+        saveCall(call);
 
         JSObject ret = new JSObject();
         ret.put("play_count", playCount);
@@ -254,6 +256,17 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
         });
 
     }
+
+    @PluginMethod()
+    public void startRecording(PluginCall call) {
+        mSoundRecorder.TTStartRecording(0);
+        saveCall(call);
+
+//        JSObject ret = new JSObject();
+//        ret.put("message", "success start recording");
+//        call.success(ret);
+    }
+
 
     /**
      * Method to stop the recorder
