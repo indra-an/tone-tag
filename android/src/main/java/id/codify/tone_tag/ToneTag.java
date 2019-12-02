@@ -29,10 +29,11 @@ import java.security.InvalidKeyException;
 @NativePlugin(
         permissions={
                 Manifest.permission.RECORD_AUDIO
-        }
+        },
+        requestCodes={12345}
 )
 public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListener, SoundPlayer.TTOnPlaybackFinishedListener {
-    static final int PERMISSION_RECORD_AUDIO = 0;
+    static final int PERMISSION_RECORD_AUDIO = 12345;
 
     private static final String TAG = ToneTag.class.getSimpleName();
     private static final String KEY = "068f0aaa2f7d1c222a68d75b972ed318d9ec98ce3d6ac8856972fb80a20256a6";
@@ -56,17 +57,19 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
     }
 
     @PluginMethod()
-    private void initSdk(PluginCall call) {
+    public void initSdk(PluginCall call) {
         mContext = this.getBridge().getContext();
+        saveCall(call);
 
         if (!hasRequiredPermissions()) {
-            saveCall(call);
-            pluginRequestAllPermissions();
+            pluginRequestPermissions(new String[] {
+                    Manifest.permission.RECORD_AUDIO
+            }, PERMISSION_RECORD_AUDIO);
         } else {
             try {
-                initToneTagSDK(call);
+                initToneTagSDK();
             } catch (InvalidKeyException e) {
-                displayOnUI(call, e.getLocalizedMessage());
+                displayOnUI(e.getLocalizedMessage());
             }
         }
     }
@@ -75,7 +78,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
      * Method to play Sound player with max input 10 digits data
      */
     @PluginMethod()
-    private void playUltraTone(PluginCall call) {
+    public void playUltraTone(PluginCall call) {
         String playCount = call.getString("play_count");
         String token = call.getString("token").trim();
         String ticket = call.getString("ticket").trim();
@@ -123,7 +126,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
      * Method to stop Sound player
      */
     @PluginMethod()
-    private void stopPlaying(PluginCall call) {
+    public void stopPlaying(PluginCall call) {
         if (mSoundPlayer != null) {
             if (mSoundPlayer.isPlaying()) {
                 mSoundPlayer.TTStopPlaying();
@@ -139,7 +142,8 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
      * Method to initiate Tonetag SDK
      */
     @PluginMethod()
-    private void initToneTagSDK(PluginCall call) throws InvalidKeyException {
+    private void initToneTagSDK() throws InvalidKeyException {
+        PluginCall savedCall = getSavedCall();
 
         mToneTagManager = new ToneTagManager(mContext, KEY);
         String expiryDate = ToneTagManager.getKeyExpiryDate(KEY).toString();
@@ -150,18 +154,19 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
 
         JSObject ret = new JSObject();
         ret.put("message", "success init SDK");
-        call.success(ret);
+        savedCall.success(ret);
     }
 
     @PluginMethod()
-    private void displayOnUI(final PluginCall call, final String message) {
+    private void displayOnUI(final String message) {
         this.getBridge().getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                PluginCall savedCall = getSavedCall();
 
                 JSObject ret = new JSObject();
                 ret.put("message", message);
-                call.success(ret);
+                savedCall.success(ret);
             }
         });
     }
@@ -236,7 +241,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
                 if (mIsChannelADataReceived && mIsChannelCDataReceived) {
                     mIsChannelADataReceived = false;
                     mIsChannelCDataReceived = false;
-                    displayOnUI(savedCall, "Received data: \n" + strBuilder.toString());
+                    displayOnUI("Received data: \n" + strBuilder.toString());
                     try {
                         toneG.startTone(ToneGenerator.TONE_DTMF_9, 60);
                     } catch (RuntimeException e) {
@@ -254,7 +259,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
      * Method to stop the recorder
      */
     @PluginMethod()
-    private void stopRecording(PluginCall call) {
+    public void stopRecording(PluginCall call) {
         if (mSoundRecorder != null) {
             if (mSoundRecorder.isRecordingOn()) {
                 mSoundRecorder.TTStopRecording();
@@ -331,7 +336,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
         }
 
         String str = strBuilder.toString();
-        displayOnUI(savedCall,"Played data: \n" + str);
+        displayOnUI("Played data: \n" + str);
 //        doValidateStartOrStopPlayer();
 
     }

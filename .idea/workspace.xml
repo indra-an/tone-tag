@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9a55492e-b438-434a-898e-e2db19353572" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/id/codify/tone_tag/ToneTag.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/id/codify/tone_tag/ToneTag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,11 +30,6 @@
             <path>
               <item name="tone_tag" type="b2602c69:ProjectViewProjectNode" />
               <item name="tone_tag" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tone_tag" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tone_tag" type="462c0819:PsiDirectoryNode" />
-              <item name="android" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -75,7 +70,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="877" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" visible="true" weight="0.32980973" />
       <window_info id="Structure" side_tool="true" />
