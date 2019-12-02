@@ -41,6 +41,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
     private SoundPlayer mSoundPlayer;
     private boolean mIsChannelADataReceived, mIsChannelCDataReceived;
     private SoundRecorder mSoundRecorder;
+    private Context mContext;
 
     private ToneTagManager mToneTagManager = null;
     private ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 50);
@@ -55,6 +56,8 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
     }
 
     private void initSdk(PluginCall call) {
+        mContext = this.getBridge().getContext();
+        
         if (!hasRequiredPermissions()) {
             saveCall(call);
             pluginRequestAllPermissions();
@@ -133,6 +136,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
      * Method to initiate Tonetag SDK
      */
     private void initToneTagSDK(PluginCall call) throws InvalidKeyException {
+
         mToneTagManager = new ToneTagManager(mContext, KEY);
         String expiryDate = ToneTagManager.getKeyExpiryDate(KEY).toString();
         Log.e(TAG, "Expiry Date : " + expiryDate);
