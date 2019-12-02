@@ -55,9 +55,10 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
         call.success(ret);
     }
 
+    @PluginMethod()
     private void initSdk(PluginCall call) {
         mContext = this.getBridge().getContext();
-        
+
         if (!hasRequiredPermissions()) {
             saveCall(call);
             pluginRequestAllPermissions();
@@ -73,6 +74,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
     /**
      * Method to play Sound player with max input 10 digits data
      */
+    @PluginMethod()
     private void playUltraTone(PluginCall call) {
         String playCount = call.getString("play_count");
         String token = call.getString("token").trim();
@@ -120,6 +122,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
     /**
      * Method to stop Sound player
      */
+    @PluginMethod()
     private void stopPlaying(PluginCall call) {
         if (mSoundPlayer != null) {
             if (mSoundPlayer.isPlaying()) {
@@ -135,6 +138,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
     /**
      * Method to initiate Tonetag SDK
      */
+    @PluginMethod()
     private void initToneTagSDK(PluginCall call) throws InvalidKeyException {
 
         mToneTagManager = new ToneTagManager(mContext, KEY);
@@ -149,6 +153,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
         call.success(ret);
     }
 
+    @PluginMethod()
     private void displayOnUI(final PluginCall call, final String message) {
         this.getBridge().getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -248,6 +253,7 @@ public class ToneTag extends Plugin implements SoundRecorder.TTOnDataFoundListen
     /**
      * Method to stop the recorder
      */
+    @PluginMethod()
     private void stopRecording(PluginCall call) {
         if (mSoundRecorder != null) {
             if (mSoundRecorder.isRecordingOn()) {
